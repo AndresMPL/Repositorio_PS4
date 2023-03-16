@@ -159,7 +159,7 @@
                                                             rgb(249/255, 220/255, 92/255), 
                                                             rgb(229/255, 249/255, 147/255)))  
   
-  bigramas_positivos <- train_bigrams_sep[train_bigrams_sep$word1 %in% adjetivos_buenos, ]
+  bigramas_positivos <- train_bigrams_sep[tweets_bigrams_s$word1 %in% adjetivos_buenos, ]
   wordcloud(bigramas_positivos$word2, min.freq = 10000,   colors= c(rgb(72/255, 191/255, 169/255),
                                                                     rgb(249/255, 220/255, 92/255), 
                                                                     rgb(229/255, 249/255, 147/255))) 
