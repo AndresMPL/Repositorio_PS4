@@ -153,6 +153,7 @@
   sentimientos_df <- get_nrc_sentiment(adjetivos$token, lang="spanish")
   sentimientos_df$adjetivos  = adjetivos$token
   
+  #--Cambiar colores--
   adjetivos_buenos <-sentimientos_df[sentimientos_df$positive==1, "adjetivos"]
   wordcloud(adjetivos_buenos, min.freq = 10000,   colors= c(rgb(72/255, 191/255, 169/255),
                                                             rgb(249/255, 220/255, 92/255), 
