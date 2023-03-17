@@ -54,6 +54,7 @@ autor_tweets <- ggplot(n_tweets, aes(name, n, fill = name)) +
 
 ##Lemma
   
+  #udpipe::udpipe_download_model('spanish')
   model <- udpipe_load_model(file = "spanish-gsd-ud-2.5-191206.udpipe")
   
   palabras_unicas <- train_token %>% distinct(word = train_token$word)
@@ -79,12 +80,18 @@ autor_tweets <- ggplot(n_tweets, aes(name, n, fill = name)) +
     summarise(text = str_c(lemma, collapse = " ")) %>%
     ungroup()
   
-  setdiff(train_clean$id, train_clean_2$id)
+  diferencia <- setdiff(train_clean$id, train_clean_2$id) %>% as.data.frame()
   
-  data[c(1490, 1491),]
+  dif <- nrow(diferencia)
+  inicial <- nrow(train_clean)
+  final <- nrow(train_clean_2)
+  
+  inicial - final #debe ser igual a dif
+  
+  train_clean %>% filter (id == "ce1464da0f03a61f2659947b") #Ejemplo para validar
   
   
-#Corpus----
+#Matriz de Términos----
   
   tm_corpus <- Corpus(VectorSource(x = train_clean_2$text))
   str(tm_corpus)
@@ -92,6 +99,7 @@ autor_tweets <- ggplot(n_tweets, aes(name, n, fill = name)) +
   tf_idf <- TermDocumentMatrix(tm_corpus, control = list(weighting = weightTfIdf))
   tf_idf <- as.matrix(tf_idf) %>% t() %>% as.data.frame()
   
+  train_clean_2$text[1]
   tf_idf[1, 1:10]
   head(tf_idf)
   dim(tf_idf)
@@ -99,12 +107,12 @@ autor_tweets <- ggplot(n_tweets, aes(name, n, fill = name)) +
   columnas_seleccionadas <- colSums(tf_idf) %>%
     data.frame() %>%
     arrange(desc(.)) %>%
-    head(50) %>%
+    head(1000) %>%
     rownames()
   
-  tf_idf_reducido <- tf_idf %>%
-    select(all_of(columnas_seleccionadas))
+  tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas))
+  dim(tf_idf_reducido)
   
-  save(data, data_clean, tf_idf, tf_idf_reducido, file = "data//datos_para_modelar.RData")
+  save(train_clean, train_clean_2, tf_idf, tf_idf_reducido, file = "scripts//datos_para_modelar.RData")
   
   
