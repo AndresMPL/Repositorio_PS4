@@ -42,15 +42,18 @@ autor_tweets <- ggplot(n_tweets, aes(name, n, fill = name)) +
   
   table(train_cloud$name) %>% as.data.frame()
   
-  cloud_lopez <- train_cloud %>% filter(name == "Lopez") %>% arrange(desc(n)) %>% head(50)
-  cloud_uribe <- train_cloud %>% filter(name == "Uribe") %>% arrange(desc(n)) %>% head(50)
-  cloud_petro <- train_cloud %>% filter(name == "Petro") %>% arrange(desc(n)) %>% head(50)
+  cloud_lopez <- train_cloud  %>% filter(name == "Lopez") %>% select(word, n) %>% arrange(desc(n)) %>% head(50)
+  cloud_uribe <- train_cloud %>% filter(name == "Uribe") %>% select(word, n) %>% arrange(desc(n)) %>% head(50)
+  cloud_petro <- train_cloud %>% filter(name == "Petro") %>% select(word, n) %>% arrange(desc(n)) %>% head(50)
   
   wordcloud(train_cloud$word, freq = train_cloud$n, min.freq = 80, colors= brewer.pal(8, "Dark2"),random.order = FALSE)
   wordcloud(cloud_lopez$word, freq = cloud_lopez$n, colors= brewer.pal(8, "Dark2"),random.order = FALSE)
   wordcloud(cloud_uribe$word, freq = cloud_uribe$n, colors= brewer.pal(8, "Dark2"),random.order = FALSE)
   wordcloud(cloud_petro$word, freq = cloud_petro$n, colors= brewer.pal(8, "Dark2"),random.order = FALSE)
-
+  
+  wordcloud2(data = cloud_lopez)
+  wordcloud2(data = cloud_uribe)
+  wordcloud2(data = cloud_petro)
 
 ##Lemma
   
