@@ -60,7 +60,7 @@ n_h = nrow(X_train)/(2*(ncol(X_train) + 5))
 rm(model)
 model <- keras_model_sequential() 
 model %>% 
-        layer_dense(units = 2, activation = 'relu', input_shape = ncol(X_train)) %>% 
+        layer_dense(units = 4, activation = 'relu', input_shape = ncol(X_train)) %>% 
         layer_dropout(rate = 0.5) %>%
         layer_dense(units = 4, activation = 'softmax')
 
@@ -68,9 +68,10 @@ summary(model)
 
 model %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
 
-history <- model %>% fit(X_train, y_train, epochs = 50, batch_size = 2^6, validation_split = 0.2)
+history <- model %>% fit(X_train, y_train, epochs = 100, batch_size = 2^8, validation_split = 0.2)
 
-plot(history)
+history_plot <- plot(history)
+history_plot
 
 model %>% evaluate(X_test, y_test)
 
@@ -82,6 +83,5 @@ y_hat <- model %>% predict(X_test) %>% k_argmax()
 confusionMatrix(data = factor(as.numeric(y_hat), levels = 1:3), 
                 reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
 
-df1 <- factor(as.numeric(y_hat)) %>% as.data.frame()
 
 
