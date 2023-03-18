@@ -30,10 +30,15 @@
   glimpse(train)
   glimpse(test)
   
-
+#Unificar bases ----------------------------------------------------------
+  
+  id_test <- test %>% select(id)
+  test$name <- NA 
+  dt <- rbind(train,test)
+  
 #Limpiamos el texto--------------------------------------------------------
   
-  train_clean <- train %>% 
+  dt_clean <- dt %>% 
     mutate(corpus = stri_trans_general(text, id = "Latin-ASCII")) %>%    
     mutate(corpus = removeNumbers(text)) %>%
     mutate(corpus = removePunctuation(corpus)) %>%
@@ -48,12 +53,12 @@
     mutate(corpus = gsub("\\b\\w{1,2}\\b", " ", corpus)) %>% 
     mutate(corpus = gsub("\\s+", " ", corpus)) 
 
-  train_clean <- train_clean %>% mutate(n_palabras_i = str_count(text, "\\S+"))
+  dt_clean <- dt_clean %>% mutate(n_palabras_i = str_count(text, "\\S+"))
   
 #Tokens----
 
-  train_token <- train_clean %>% unnest_tokens("word", corpus)
-  train_token %>% count(word, sort = TRUE) %>% head()
+  dt_token <- dt_clean %>% unnest_tokens("word", corpus)
+  dt_token %>% count(word, sort = TRUE) %>% head()
   
   sw <- c()
   for (s in c("snowball", "stopwords-iso", "nltk")) {
@@ -64,19 +69,20 @@
       sw <- unique(stri_trans_general(str = sw, id = "Latin-ASCII"))
       sw <- data.frame(word = sw)
   
-  nrow(train_token)
+  nrow(dt_token)
   
-  train_token <- train_token %>% anti_join(sw, by = "word")
+  dt_token <- dt_token %>% anti_join(sw, by = "word")
   
-  nrow(train_token)
+  nrow(dt_token)
   
   
 ##Lemma
   
   #udpipe::udpipe_download_model('spanish')
+  
   model <- udpipe_load_model(file = "spanish-gsd-ud-2.5-191206.udpipe")
   
-  palabras_unicas <- train_token %>% distinct(word = train_token$word)
+  palabras_unicas <- dt_token %>% distinct(word = dt_token$word)
   
   udpipe_results <- udpipe_annotate(model, x = palabras_unicas$word)
   
@@ -84,28 +90,28 @@
   
   udpipe_results <- udpipe_results %>% select(token, lemma) %>% rename("word" = "token")
   
-  train_token <- train_token %>% left_join(udpipe_results, by = "word", multiple = "all")
+  dt_token <- dt_token %>% left_join(udpipe_results, by = "word", multiple = "all")
   
-  train_token[is.na(train_token$lemma), "lemma"] <- train_token[is.na(train_token$lemma), "word"]
+  dt_token[is.na(dt_token$lemma), "lemma"] <- dt_token[is.na(dt_token$lemma), "word"]
   
-  conteo <- train_token %>% count(lemma) %>% arrange(desc(n)) %>% tail(1000)
+  conteo <- dt_token %>% count(lemma) %>% arrange(desc(n)) %>% tail(1000)
   
-  palabras_eliminar <- train_token %>% count(lemma) %>% filter(n < 10)
+  palabras_eliminar <- dt_token %>% count(lemma) %>% filter(n < 10)
   
-  train_token <- train_token %>% anti_join(palabras_eliminar, by = "lemma") 
+  dt_token <- dt_token %>% anti_join(palabras_eliminar, by = "lemma") 
   
-  train_clean_2 <- train_token %>%
+  dt_clean_2 <- dt_token %>%
     group_by(name, id, n_palabras_i) %>% 
     summarise(text = str_c(lemma, collapse = " ")) %>%
     ungroup()
   
-  diferencia <- setdiff(train_clean$id, train_clean_2$id) %>% as.data.frame()
+  diferencia <- setdiff(dt_clean$id, dt_clean_2$id) %>% as.data.frame()
   
   dif <- nrow(diferencia)
-  inicial <- nrow(train_clean)
-  final <- nrow(train_clean_2)
+  inicial <- nrow(dt_clean)
+  final <- nrow(dt_clean_2)
   
   inicial - final #debe ser igual a dif
   
-  train_clean %>% filter (id == "ce1464da0f03a61f2659947b") #Ejemplo para validar
+  dt_clean %>% filter (id == "ce1464da0f03a61f2659947b") #Ejemplo para validar
   
