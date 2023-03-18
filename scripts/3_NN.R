@@ -43,6 +43,7 @@ class(X)
 dim(X)
 
 set.seed(10101)
+
 n <- nrow(train_clean_2)
 data_rows <- floor(0.70 * n)
 train_indices <- sample(1:n, data_rows)
@@ -51,42 +52,36 @@ X_test <- X[-train_indices, ]
 y_train <- Y[train_indices, ]
 y_test <- Y[-train_indices, ]
 
-n_h = nrow(X_train)/(2*(ncol(X_train) + 5)) #Es mayor que 3
+n_h = nrow(X_train)/(2*(ncol(X_train) + 5))
 
+
+##Modelo 1---------------------------------------------------------------------
+
+rm(model)
 model <- keras_model_sequential() 
-
 model %>% 
-  layer_dense(units = 1, activation = 'relu', input_shape = ncol(X_train)) %>% 
-  layer_dropout(rate = 0.5) %>%
-  layer_dense(units = 4, activation = 'softmax')
+        layer_dense(units = 2, activation = 'relu', input_shape = ncol(X_train)) %>% 
+        layer_dropout(rate = 0.5) %>%
+        layer_dense(units = 4, activation = 'softmax')
 
 summary(model)
 
-model %>% compile(
-          optimizer = 'adam',
-          loss = 'categorical_crossentropy',
-          metrics = c('CategoricalAccuracy')
-              )
+model %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
 
-history <- model %>% 
-  fit(
-    X_train, y_train, 
-    epochs = 5, 
-    batch_size = 2^8,
-    validation_split = 0.2
-      )
+history <- model %>% fit(X_train, y_train, epochs = 50, batch_size = 2^6, validation_split = 0.2)
 
 plot(history)
 
 model %>% evaluate(X_test, y_test)
 
-y_hat <- model  %>% predict(X_test) %>% k_argmax()
+y_hat <- model %>% predict(X_test) %>% k_argmax()
 
-install.packages("caret")
-library(caret)
+
+#library(caret)
 
 confusionMatrix(data = factor(as.numeric(y_hat), levels = 1:3), 
                 reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
 
+df1 <- factor(as.numeric(y_hat)) %>% as.data.frame()
 
 
