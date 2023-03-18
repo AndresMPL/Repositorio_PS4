@@ -33,9 +33,6 @@
 
 #Limpiamos el texto--------------------------------------------------------
   
-  #train$name <- as.factor(train$name)
-  #levels(train$name)
-  
   train_clean <- train %>% 
     mutate(corpus = stri_trans_general(text, id = "Latin-ASCII")) %>%    
     mutate(corpus = removeNumbers(text)) %>%
@@ -51,6 +48,7 @@
     mutate(corpus = gsub("\\b\\w{1,2}\\b", " ", corpus)) %>% 
     mutate(corpus = gsub("\\s+", " ", corpus)) 
 
+  train_clean <- train_clean %>% mutate(n_palabras_i = str_count(text, "\\S+"))
   
 #Tokens----
 
@@ -71,4 +69,43 @@
   train_token <- train_token %>% anti_join(sw, by = "word")
   
   nrow(train_token)
+  
+  
+##Lemma
+  
+  #udpipe::udpipe_download_model('spanish')
+  model <- udpipe_load_model(file = "spanish-gsd-ud-2.5-191206.udpipe")
+  
+  palabras_unicas <- train_token %>% distinct(word = train_token$word)
+  
+  udpipe_results <- udpipe_annotate(model, x = palabras_unicas$word)
+  
+  udpipe_results <- as_tibble(udpipe_results)
+  
+  udpipe_results <- udpipe_results %>% select(token, lemma) %>% rename("word" = "token")
+  
+  train_token <- train_token %>% left_join(udpipe_results, by = "word", multiple = "all")
+  
+  train_token[is.na(train_token$lemma), "lemma"] <- train_token[is.na(train_token$lemma), "word"]
+  
+  conteo <- train_token %>% count(lemma) %>% arrange(desc(n)) %>% tail(1000)
+  
+  palabras_eliminar <- train_token %>% count(lemma) %>% filter(n < 10)
+  
+  train_token <- train_token %>% anti_join(palabras_eliminar, by = "lemma") 
+  
+  train_clean_2 <- train_token %>%
+    group_by(name, id, n_palabras_i) %>% 
+    summarise(text = str_c(lemma, collapse = " ")) %>%
+    ungroup()
+  
+  diferencia <- setdiff(train_clean$id, train_clean_2$id) %>% as.data.frame()
+  
+  dif <- nrow(diferencia)
+  inicial <- nrow(train_clean)
+  final <- nrow(train_clean_2)
+  
+  inicial - final #debe ser igual a dif
+  
+  train_clean %>% filter (id == "ce1464da0f03a61f2659947b") #Ejemplo para validar
   
