@@ -32,6 +32,7 @@ train_clean_2$name2 <- ifelse(train_clean_2$name2 == "Lopez", 1, ifelse(train_cl
 
 train_clean_2$name2 <- as.factor(train_clean_2$name2)
 table(train_clean_2$name2)
+levels(train_clean_2$name2)
 
 Y <- train_clean_2$name2
 Y <- to_categorical(Y)
@@ -62,7 +63,7 @@ n_h = nrow(X_train)/(2*(ncol(X_train) + 5))
 rm(model)
 model <- keras_model_sequential() 
 model %>% 
-        layer_dense(units = 2, activation = 'relu', input_shape = ncol(X_train)) %>% 
+        layer_dense(units = 3, activation = 'relu', input_shape = ncol(X_train)) %>% 
         layer_dropout(rate = 0.5) %>%
         layer_dense(units = 4, activation = 'softmax')
 
