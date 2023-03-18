@@ -42,7 +42,7 @@ nrow(test_token)
 ##Lemma
 
 #udpipe::udpipe_download_model('spanish')
-#model <- udpipe_load_model(file = "spanish-gsd-ud-2.5-191206.udpipe")
+model <- udpipe_load_model(file = "spanish-gsd-ud-2.5-191206.udpipe")
 
 palabras_unicas2 <- test_token %>% distinct(word = test_token$word)
 
