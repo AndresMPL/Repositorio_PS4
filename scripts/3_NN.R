@@ -91,6 +91,11 @@ confusionMatrix(data = factor(as.numeric(y_hat), levels = 1:3),
 
 ##Modelo 2---------------------------------------------------------------------
 
+#layer_dense units = 2
+#epochs = 200
+#batch_size = 2^8
+#1000
+
 rm(model2)
 model2 <- keras_model_sequential() 
 model2 %>% 
@@ -118,3 +123,60 @@ confusionMatrix(data = factor(as.numeric(y_hat2), levels = 1:3),
                 reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
 
 
+
+##Modelo 3---------------------------------------------------------------------
+
+rm(model3)
+model3 <- keras_model_sequential() 
+model3 %>% 
+  layer_dense(units = 10, activation = 'relu', input_shape = ncol(X_train)) %>% 
+  layer_dropout(rate = 0.5) %>%
+  layer_dense(units = 4, activation = 'softmax')
+
+summary(model3)
+
+model3 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
+
+history3 <- model3 %>% fit(X_train, y_train, epochs = 500, batch_size = 2^8, validation_split = 0.2)
+
+history_plot3 <- plot(history3)
+history_plot3
+
+model3 %>% evaluate(X_test, y_test)
+
+y_hat3 <- model3 %>% predict(X_test) %>% k_argmax()
+
+
+#library(caret)
+
+confusionMatrix(data = factor(as.numeric(y_hat3), levels = 1:3), 
+                reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
+
+
+##Modelo 4---------------------------------------------------------------------
+
+rm(model4)
+model4 <- keras_model_sequential() 
+model4 %>% 
+  layer_dense(units = 1, activation = 'relu', input_shape = ncol(X_train)) %>% 
+  layer_dropout(rate = 0.5) %>%
+  layer_dense(units = 4, activation = 'softmax')
+
+summary(model4)
+
+model4 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
+
+history3 <- model4 %>% fit(X_train, y_train, epochs = 200, batch_size = 2^8, validation_split = 0.2)
+
+history_plot3 <- plot(history3)
+history_plot3
+
+model4 %>% evaluate(X_test, y_test)
+
+y_hat4 <- model4 %>% predict(X_test) %>% k_argmax()
+
+
+#library(caret)
+
+confusionMatrix(data = factor(as.numeric(y_hat4), levels = 1:3), 
+                reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
