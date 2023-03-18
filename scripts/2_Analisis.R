@@ -68,7 +68,7 @@ autor_tweets
   columnas_seleccionadas <- colSums(tf_idf) %>%
     data.frame() %>%
     arrange(desc(.)) %>%
-    head(50) %>%
+    head(1000) %>%
     rownames()
   
   tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas))
