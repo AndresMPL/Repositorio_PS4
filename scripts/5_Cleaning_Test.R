@@ -1,4 +1,12 @@
 
+
+#------------------------------------------------------------------------------#
+#
+#                            2 - LIMPIEZA TEST
+#
+#------------------------------------------------------------------------------#
+
+
 #Limpiamos el texto--------------------------------------------------------
 
 test_clean <- test %>% 
@@ -98,7 +106,7 @@ dim(tf_idf2)
 columnas_seleccionadas2 <- colSums(tf_idf2) %>%
   data.frame() %>%
   arrange(desc(.)) %>%
-  head(50) %>%
+  head(ncol(X_train)) %>%
   rownames()
 
 tf_idf_reducido2 <- tf_idf2 %>% select(all_of(columnas_seleccionadas2))
