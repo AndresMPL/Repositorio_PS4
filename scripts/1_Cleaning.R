@@ -18,7 +18,7 @@
   
   p_load(dplyr, tidyverse, tm, textir, tidytext, wordcloud, SentimentAnalysis, 
          udpipe, syuzhet,stringi,stopwords,textstem,topicmodels, rio, caret, sentimentr,
-         janitor, wordcloud2, udpipe,ggcorrplot, keras)
+         janitor, wordcloud2, udpipe,ggcorrplot)
 
   rm(list=ls())
 
