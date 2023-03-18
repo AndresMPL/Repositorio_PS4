@@ -1,6 +1,9 @@
 
+#------------------------------------------------------------------------------#
+#
+#                              6 - PREDICTIONS
+#
+#------------------------------------------------------------------------------#
 
-
-X_test_k <- as.matrix(tf_idf2)
-
-X_test_k$y_hat_k <- model %>% predict(X_test_k) %>% k_argmax()
+test_x <- tf_idf_reducido2
+y_hat_test <- model %>% predict(test_x) %>% k_argmax()
