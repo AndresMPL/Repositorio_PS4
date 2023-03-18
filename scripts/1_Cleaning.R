@@ -115,3 +115,15 @@
   
   dt_clean %>% filter (id == "ce1464da0f03a61f2659947b") #Ejemplo para validar
   
+#separ bases en train y test-------------  
+  
+  test_clean_2 <- dt_clean_2 %>% filter(id %in% id_test$id)
+  train_clean_2 <- dt_clean_2 %>% filter(!(id %in% id_test$id))
+  
+  
+  
+  
+  
+  
+  
+  
