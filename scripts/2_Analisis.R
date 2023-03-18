@@ -9,11 +9,11 @@ n_tweets = train %>% group_by(name) %>% summarise(n = n()) %>% ungroup()
 
 autor_tweets <- ggplot(n_tweets, aes(name, n, fill = name)) + 
                 geom_col() + geom_text(aes(label = n), vjust = -1, colour = "black") + 
-                ylim(c(0, 2700)) + theme_bw() + 
+                ylim(c(0, 4000)) + theme_bw() + 
                 scale_fill_manual(values = c("cadetblue3", "#CCEDB1", "#FFB90F")) + 
                 theme(legend.position = "none") +
-                labs(x = "Autor", y = "Número de tweets")
-
+                labs(x = "Autor", y = "Número de tweets", title = "Número de tweets por autor")
+autor_tweets
 
 ##Histograma de palabras----
 
