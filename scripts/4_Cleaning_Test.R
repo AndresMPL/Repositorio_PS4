@@ -112,4 +112,3 @@ columnas_seleccionadas2 <- colSums(tf_idf2) %>%
 tf_idf_reducido2 <- tf_idf2 %>% select(all_of(columnas_seleccionadas2))
 dim(tf_idf_reducido2)
 
-
