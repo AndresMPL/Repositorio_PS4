@@ -116,6 +116,6 @@ autor_tweets
   tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas))
   dim(tf_idf_reducido)
   
-  save(train_clean, train_clean_2, tf_idf, tf_idf_reducido, file = "scripts//datos_para_modelar.RData")
+  #save(train_clean, train_clean_2, tf_idf, tf_idf_reducido, file = "scripts//datos_para_modelar.RData")
   
   
