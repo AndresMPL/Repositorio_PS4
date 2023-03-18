@@ -9,6 +9,7 @@ install.packages('keras')
 library(keras)
 
 #-----------------------------------------------------
+
 install.packages("tensorflow")
 library(reticulate)
 path_to_python <- install_python()
@@ -20,6 +21,7 @@ library(keras)
 install_keras(envname = "r-reticulate")
 library(tensorflow)
 tf$constant("Hello Tensorflow!")
+
 #------------------------------------------------------
 
 sum(is.na(train_clean_2$name))
@@ -60,7 +62,7 @@ n_h = nrow(X_train)/(2*(ncol(X_train) + 5))
 rm(model)
 model <- keras_model_sequential() 
 model %>% 
-        layer_dense(units = 4, activation = 'relu', input_shape = ncol(X_train)) %>% 
+        layer_dense(units = 2, activation = 'relu', input_shape = ncol(X_train)) %>% 
         layer_dropout(rate = 0.5) %>%
         layer_dense(units = 4, activation = 'softmax')
 
