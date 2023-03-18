@@ -18,7 +18,7 @@
   
   p_load(dplyr, tidyverse, tm, textir, tidytext, wordcloud, SentimentAnalysis, 
          udpipe, syuzhet,stringi,stopwords,textstem,topicmodels, rio, caret, sentimentr,
-         janitor, wordcloud2, udpipe,ggcorrplot)
+         janitor, wordcloud2, udpipe,ggcorrplot, keras)
 
   rm(list=ls())
 
@@ -33,8 +33,8 @@
 
 #Limpiamos el texto--------------------------------------------------------
   
-  train$name <- as.factor(train$name)
-  levels(train$name)
+  #train$name <- as.factor(train$name)
+  #levels(train$name)
   
   train_clean <- train %>% 
     mutate(corpus = stri_trans_general(text, id = "Latin-ASCII")) %>%    
