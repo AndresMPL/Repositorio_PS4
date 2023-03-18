@@ -6,12 +6,12 @@
 #------------------------------------------------------------------------------#
 
 #Prueba 1-----------------------------------------------------------------------
-tokenizer <- text_tokenizer(num_words = ncol(X_train))
-tokenizer %>% fit_text_tokenizer(test_final$text)
 
-x_prueba <- texts_to_matrix(tokenizer, test_final$text, mode ="tfidf")
+Z <- as.matrix(tf_idf_reducido2)
+class(Z)
+dim(Z)
 
-y_hat_test <- model2 %>% predict(x_prueba) %>% k_argmax()
+y_hat_test <- model2 %>% predict(Z) %>% k_argmax()
 
 predicho <- factor(as.numeric(y_hat_test))
 resultados <- data.frame(id = test_final$id, name = predicho)
