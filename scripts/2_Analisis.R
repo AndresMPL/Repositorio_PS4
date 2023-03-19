@@ -65,13 +65,22 @@ autor_tweets
   head(tf_idf)
   dim(tf_idf)
   
-  columnas_seleccionadas <- colSums(tf_idf) %>%
+  columnas_seleccionadas <- intersect(colnames(tf_idf), colnames(tf_idf2))
+  
+  tf_idf <- tf_idf %>% select(all_of(columnas_seleccionadas))
+  dim(tf_idf_reducido)
+  
+  columnas_seleccionadas_2 <- colSums(tf_idf) %>%
     data.frame() %>%
     arrange(desc(.)) %>%
+<<<<<<< Updated upstream
     head(2000) %>%
+=======
+    head(2296) %>%
+>>>>>>> Stashed changes
     rownames()
   
-  tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas))
+  tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas_2))
   dim(tf_idf_reducido)
   
   #save(train_clean, train_clean_2, tf_idf, tf_idf_reducido, file = "scripts//datos_para_modelar.RData")
