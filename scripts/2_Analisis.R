@@ -5,17 +5,32 @@
 #
 #------------------------------------------------------------------------------#
 
-n_tweets = train_clean_2 %>% group_by(name) %>% summarise(n = n(), n_palabras = mean(n_palabras_i)) %>% ungroup()
+#BD TRAIN----
 
-autor_tweets <- ggplot(n_tweets, aes(name, n, fill = name)) + 
-                geom_col() + geom_text(aes(label = n), vjust = -1, colour = "black") + 
-                ylim(c(0, 4000)) + theme_bw() + 
-                scale_fill_manual(values = c("cadetblue3", "#CCEDB1", "#FFB90F")) + 
-                theme(legend.position = "none") +
-                labs(x = "Autor", y = "Número de tweets", title = "Número de tweets por autor")
-autor_tweets
+#Gráfica del número tweets por autor
 
-##Histograma de palabras----
+  train_clean_2 <- train_clean_2 %>% mutate(n_palabras_ii = str_count(text, "\\S+")) #contamos el número de palabras iniciales
+  
+  n_tweets = train_clean_2 %>% group_by(name) %>% 
+             summarise(n_tweets = n(), n_palabras_1 = sum(n_palabras_i), 
+                       n_palabras_2 = sum(n_palabras_ii)) %>% mutate(Limpieza = 1- (n_palabras_2/n_palabras_1)) %>% as.data.frame()
+  
+  n_tweets
+  
+  autor_tweets <- ggplot(n_tweets, aes(name, n_tweets, fill = name)) + 
+                  geom_col() + geom_text(aes(label = n_tweets), vjust = -1, colour = "black") + 
+                  ylim(c(0, 4000)) + theme_bw() + 
+                  scale_fill_manual(values = c("cadetblue3", "#CCEDB1", "#FFB90F")) + 
+                  theme(legend.position = "none") +
+                  labs(x = "Autor", y = "Número de tweets", title = "Número de tweets por autor") +
+                  theme(axis.text = element_text(size=12)) + 
+                  theme(axis.title.x = element_text(size=rel(1.2))) +
+                  theme(axis.title.y = element_text(size=rel(1.2))) 
+  
+  autor_tweets
+
+  
+#Palabras más usadas por autor
 
   train_cloud <- train_token %>% count(name, word) %>% group_by(name) %>% ungroup()
   
@@ -31,12 +46,14 @@ autor_tweets
                       ylab("Términos") +
                       facet_wrap(~ name, scales = "free") +
                       xlab("Frecuencia") + theme_bw() +
-                      theme(legend.position = "none") 
-                    
+                      scale_fill_manual(values = c("cadetblue3", "#CCEDB1", "#FFB90F")) +
+                      theme(legend.position = "none") +
+                      theme(axis.text = element_text(size=10), axis.title.x = element_text(size=rel(1.2)), axis.title.y = element_text(size=rel(1.2)))
+  
   imagen_top_autor
 
 
-##Nube de palabras----
+#Nube de palabras por autor
 
   train_cloud <- train_token %>% count(name, word) %>% group_by(name) %>% ungroup()
   
@@ -50,35 +67,4 @@ autor_tweets
   wordcloud(cloud_lopez$word, freq = cloud_lopez$n, colors= brewer.pal(8, "Dark2"),random.order = FALSE)
   wordcloud(cloud_uribe$word, freq = cloud_uribe$n, colors= brewer.pal(8, "Dark2"),random.order = FALSE)
   wordcloud(cloud_petro$word, freq = cloud_petro$n, colors= brewer.pal(8, "Dark2"),random.order = FALSE)
-  
- 
-#Matriz de Términos----
-  
-  tm_corpus <- Corpus(VectorSource(x = train_clean_2$text))
-  str(tm_corpus)
-  
-  tf_idf <- TermDocumentMatrix(tm_corpus, control = list(weighting = weightTfIdf))
-  tf_idf <- as.matrix(tf_idf) %>% t() %>% as.data.frame()
-  
-  train_clean_2$text[1]
-  tf_idf[1, 1:10]
-  head(tf_idf)
-  dim(tf_idf)
-  
-  columnas_seleccionadas <- intersect(colnames(tf_idf), colnames(tf_idf2)) ##se necesita correr primero cleaning_test hasta la linea 100
-  
-  tf_idf <- tf_idf %>% select(all_of(columnas_seleccionadas))
-  dim(tf_idf_reducido)
-  
-  columnas_seleccionadas_2 <- colSums(tf_idf) %>%
-    data.frame() %>%
-    arrange(desc(.)) %>%
-    head(2296) %>%
-    rownames()
-  
-  tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas_2))
-  dim(tf_idf_reducido)
-  
-  #save(train_clean, train_clean_2, tf_idf, tf_idf_reducido, file = "scripts//datos_para_modelar.RData")
-  
   
