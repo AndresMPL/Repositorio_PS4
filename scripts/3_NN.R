@@ -139,12 +139,12 @@ summary(model_3)
 
 model_3 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
 
-history3 <- model_3 %>% fit(X_train, y_train, epochs = 500, batch_size = 2^8, validation_split = 0.2)
+history3 <- model_3 %>% fit(X_train, y_train, epochs = 100, batch_size = 2^8, validation_split = 0.2)
 
 history_plot3 <- plot(history3)
 history_plot3
 
-model3 %>% evaluate(X_test, y_test)
+model_3 %>% evaluate(X_test, y_test)
 
 y_hat3 <- model_3 %>% predict(X_test) %>% k_argmax()
 
