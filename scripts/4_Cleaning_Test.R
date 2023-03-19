@@ -49,7 +49,7 @@ nrow(test_token)
 
 ##Lemma
 
-#udpipe::udpipe_download_model('spanish')
+udpipe::udpipe_download_model('spanish')
 model <- udpipe_load_model(file = "spanish-gsd-ud-2.5-191206.udpipe")
 
 palabras_unicas2 <- test_token %>% distinct(word = test_token$word)
@@ -103,12 +103,6 @@ tf_idf2[1, 1:10]
 head(tf_idf2)
 dim(tf_idf2)
 
-columnas_seleccionadas2 <- colSums(tf_idf2) %>%
-  data.frame() %>%
-  arrange(desc(.)) %>%
-  head(ncol(X_train)) %>%
-  rownames()
-
-tf_idf_reducido2 <- tf_idf2 %>% select(all_of(columnas_seleccionadas2))
+tf_idf_reducido2 <- tf_idf2 %>% select(all_of(colnames(X_train)))
 dim(tf_idf_reducido2)
 
