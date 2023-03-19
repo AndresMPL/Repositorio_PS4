@@ -116,7 +116,7 @@ history_plot2
 
 model_2 %>% evaluate(X_test, y_test)
 
-y_hat_2 <- model2 %>% predict(X_test) %>% k_argmax()
+y_hat_2 <- model_2 %>% predict(X_test) %>% k_argmax()
 
 
 #library(caret)
