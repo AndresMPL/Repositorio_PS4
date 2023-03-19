@@ -60,25 +60,27 @@ n_h = nrow(X_train)/(2*(ncol(X_train) + 5))
 
 ##Modelo 1---------------------------------------------------------------------
 
-rm(model)
-model <- keras_model_sequential() 
-model %>% 
-        layer_dense(units = 3, activation = 'relu', input_shape = ncol(X_train)) %>% 
+##1500 palabras
+
+rm(model_1)
+model_1 <- keras_model_sequential() 
+model_1 %>% 
+        layer_dense(units = 2, activation = 'relu', input_shape = ncol(X_train)) %>% 
         layer_dropout(rate = 0.5) %>%
         layer_dense(units = 4, activation = 'softmax')
 
-summary(model)
+summary(model_1)
 
-model %>% compile(optimizer = 'sgd', loss = 'mean_squared_error', metrics = c('accuracy'))
+model_1 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('accuracy'))
 
-history <- model %>% fit(X_train, y_train, epochs = 100, batch_size = 2^8, validation_split = 0.2)
+history <- model_1 %>% fit(X_train, y_train, epochs = 100, batch_size = 2^8, validation_split = 0.2)
 
 history_plot <- plot(history)
 history_plot
 
-model %>% evaluate(X_test, y_test)
+model_1 %>% evaluate(X_test, y_test)
 
-y_hat <- model %>% predict(X_test) %>% k_argmax()
+y_hat <- model_1 %>% predict(X_test) %>% k_argmax()
 
 
 #library(caret)
@@ -91,6 +93,7 @@ confusionMatrix(data = factor(as.numeric(y_hat), levels = 1:3),
 
 ##Modelo 2---------------------------------------------------------------------
 
+<<<<<<< Updated upstream
 #layer_dense units = 2
 #epochs = 200
 #batch_size = 2^8
@@ -99,22 +102,29 @@ confusionMatrix(data = factor(as.numeric(y_hat), levels = 1:3),
 rm(model2)
 model2 <- keras_model_sequential() 
 model2 %>% 
+=======
+##2296 palabras
+
+rm(model_2)
+model_2 <- keras_model_sequential() 
+model_2 %>% 
+>>>>>>> Stashed changes
   layer_dense(units = 2, activation = 'relu', input_shape = ncol(X_train)) %>% 
   layer_dropout(rate = 0.5) %>%
   layer_dense(units = 4, activation = 'softmax')
 
-summary(model2)
+summary(model_2)
 
-model2 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('accuracy'))
+model_2 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('accuracy'))
 
-history2 <- model2 %>% fit(X_train, y_train, epochs = 200, batch_size = 2^8, validation_split = 0.2)
+history2 <- model_2 %>% fit(X_train, y_train, epochs = 100, batch_size = 2^8, validation_split = 0.2)
 
 history_plot2 <- plot(history2)
 history_plot2
 
-model2 %>% evaluate(X_test, y_test)
+model_2 %>% evaluate(X_test, y_test)
 
-y_hat2 <- model2 %>% predict(X_test) %>% k_argmax()
+y_hat_2 <- model2 %>% predict(X_test) %>% k_argmax()
 
 
 #library(caret)
