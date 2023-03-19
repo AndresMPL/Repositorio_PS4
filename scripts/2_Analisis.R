@@ -73,11 +73,7 @@ autor_tweets
   columnas_seleccionadas_2 <- colSums(tf_idf) %>%
     data.frame() %>%
     arrange(desc(.)) %>%
-<<<<<<< Updated upstream
-    head(2000) %>%
-=======
     head(2296) %>%
->>>>>>> Stashed changes
     rownames()
   
   tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas_2))
