@@ -128,25 +128,25 @@ confusionMatrix(data = factor(as.numeric(y_hat2), levels = 1:3),
 
 ##Modelo 3---------------------------------------------------------------------
 
-rm(model3)
-model3 <- keras_model_sequential() 
-model3 %>% 
+rm(model_3)
+model_3 <- keras_model_sequential() 
+model_3 %>% 
   layer_dense(units = 10, activation = 'relu', input_shape = ncol(X_train)) %>% 
   layer_dropout(rate = 0.5) %>%
   layer_dense(units = 4, activation = 'softmax')
 
-summary(model3)
+summary(model_3)
 
-model3 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
+model_3 %>% compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
 
-history3 <- model3 %>% fit(X_train, y_train, epochs = 500, batch_size = 2^8, validation_split = 0.2)
+history3 <- model_3 %>% fit(X_train, y_train, epochs = 500, batch_size = 2^8, validation_split = 0.2)
 
 history_plot3 <- plot(history3)
 history_plot3
 
 model3 %>% evaluate(X_test, y_test)
 
-y_hat3 <- model3 %>% predict(X_test) %>% k_argmax()
+y_hat3 <- model_3 %>% predict(X_test) %>% k_argmax()
 
 
 #library(caret)
