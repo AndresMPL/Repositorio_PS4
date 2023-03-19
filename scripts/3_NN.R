@@ -93,22 +93,14 @@ confusionMatrix(data = factor(as.numeric(y_hat), levels = 1:3),
 
 ##Modelo 2---------------------------------------------------------------------
 
-<<<<<<< Updated upstream
 #layer_dense units = 2
 #epochs = 200
 #batch_size = 2^8
-#1000
-
-rm(model2)
-model2 <- keras_model_sequential() 
-model2 %>% 
-=======
-##2296 palabras
+#2296
 
 rm(model_2)
 model_2 <- keras_model_sequential() 
 model_2 %>% 
->>>>>>> Stashed changes
   layer_dense(units = 2, activation = 'relu', input_shape = ncol(X_train)) %>% 
   layer_dropout(rate = 0.5) %>%
   layer_dense(units = 4, activation = 'softmax')
