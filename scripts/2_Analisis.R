@@ -65,7 +65,7 @@ autor_tweets
   head(tf_idf)
   dim(tf_idf)
   
-  columnas_seleccionadas <- intersect(colnames(tf_idf), colnames(tf_idf2))
+  columnas_seleccionadas <- intersect(colnames(tf_idf), colnames(tf_idf2)) ##se necesita correr primero cleaning_test hasta la linea 100
   
   tf_idf <- tf_idf %>% select(all_of(columnas_seleccionadas))
   dim(tf_idf_reducido)
