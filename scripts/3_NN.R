@@ -448,4 +448,4 @@ library(keras)
   
   confusionMatrix(data = factor(as.numeric(y_hat_13), levels = 1:3), 
                   reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
-  
+
