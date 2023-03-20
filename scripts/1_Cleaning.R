@@ -50,6 +50,10 @@
     mutate(corpus = gsub("\\s+", " ", corpus))                            #Dobles espacios
 
   train_clean <- train_clean %>% mutate(n_palabras_i = str_count(text, "\\S+")) #contamos el número de palabras iniciales
+ 
+   n_tweets_i = train_clean %>% group_by(name) %>% 
+    summarise(n_tweets_inicial = n()) %>% 
+                  as.data.frame()
   
 #Tokens
 #Generamos lo tokens de las expresiones y corregimos mas stopwords
@@ -76,7 +80,7 @@
 #Lemma
 #Lematización de los textos
   
-# udpipe::udpipe_download_model('spanish') #Descargar en caso que no se tenga
+  udpipe::udpipe_download_model('spanish') #Descargar en caso que no se tenga
   
   model <- udpipe_load_model(file = "spanish-gsd-ud-2.5-191206.udpipe")
   
@@ -92,10 +96,10 @@
   
   train_token[is.na(train_token$lemma), "lemma"] <- train_token[is.na(train_token$lemma), "word"]
   
-  #data <- test_token %>% group_by(lemma) %>% summarise(n = n()) %>% arrange(desc(-n)) %>% as.data.frame()
-  #palabras_eliminar <- train_token %>% count(lemma) %>% filter(n < 20)
+  data <- train_token %>% group_by(lemma) %>% summarise(n = n()) %>% arrange(desc(-n)) %>% as.data.frame()
+  palabras_eliminar <- train_token %>% count(lemma) %>% filter(n < 10)
   
-  #train_token <- train_token %>% anti_join(palabras_eliminar, by = "lemma") 
+  train_token <- train_token %>% anti_join(palabras_eliminar, by = "lemma") 
   
   train_clean_2 <- train_token %>% #Generamos la BD con el texto limpio
     group_by(name, id, n_palabras_i) %>% 
