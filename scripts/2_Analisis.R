@@ -16,6 +16,10 @@
                        n_palabras_2 = sum(n_palabras_ii)) %>% mutate(Limpieza = 1- (n_palabras_2/n_palabras_1)) %>% as.data.frame()
   
   n_tweets
+  install.packages("xtable")
+  library(xtable)
+  tabla <- xtable(n_tweets)
+  print(tabla)
   
   autor_tweets <- ggplot(n_tweets, aes(name, n_tweets, fill = name)) + 
                   geom_col() + geom_text(aes(label = n_tweets), vjust = -1, colour = "black") + 
