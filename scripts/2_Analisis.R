@@ -12,17 +12,18 @@
   train_clean_2 <- train_clean_2 %>% mutate(n_palabras_ii = str_count(text, "\\S+")) #contamos el número de palabras iniciales
   
   n_tweets = train_clean_2 %>% group_by(name) %>% 
-             summarise(n_tweets = n(), n_palabras_1 = sum(n_palabras_i), 
+             summarise(n_tweets_final = n(), n_palabras_1 = sum(n_palabras_i), 
                        n_palabras_2 = sum(n_palabras_ii)) %>% mutate(Limpieza = 1- (n_palabras_2/n_palabras_1)) %>% as.data.frame()
   
+  n_tweets <- inner_join(n_tweets_i, n_tweets, by = "name") 
+  
   n_tweets
-  install.packages("xtable")
   library(xtable)
   tabla <- xtable(n_tweets)
   print(tabla)
   
-  autor_tweets <- ggplot(n_tweets, aes(name, n_tweets, fill = name)) + 
-                  geom_col() + geom_text(aes(label = n_tweets), vjust = -1, colour = "black") + 
+  autor_tweets <- ggplot(n_tweets, aes(name, n_tweets_inicial, fill = name)) + 
+                  geom_col() + geom_text(aes(label = n_tweets_inicial), vjust = -1, colour = "black") + 
                   ylim(c(0, 4000)) + theme_bw() + 
                   scale_fill_manual(values = c("cadetblue3", "#CCEDB1", "#FFB90F")) + 
                   theme(legend.position = "none") +
