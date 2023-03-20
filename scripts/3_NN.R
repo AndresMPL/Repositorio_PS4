@@ -422,11 +422,13 @@ library(keras)
   rm(model_13)
   model_13 <- keras_model_sequential() 
   model_13 %>% 
-    layer_dense(units = 512, activation = 'relu', input_shape = ncol(X_train)) %>% 
+    layer_dense(units = 1024, activation = 'relu', input_shape = ncol(X_train)) %>% 
     layer_dropout(rate = 0.5) %>%
-    layer_dense(units = 256, activation = 'relu') %>%
+    layer_dense(units = 512, activation = 'softmax') %>%
     layer_dropout(rate = 0.5) %>%
-    layer_dense(units = 128, activation = 'softmax')  %>%
+    layer_dense(units = 256, activation = 'softmax') %>%
+    layer_dropout(rate = 0.5) %>%
+    layer_dense(units = 128, activation = 'relu')  %>%
     layer_dropout(rate = 0.5) %>%
     layer_dense(units = 4, activation = 'softmax')
   
@@ -434,7 +436,7 @@ library(keras)
   
   model_13 %>% compile(optimizer = optimizer_adam(learning_rate = 0.001), loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
   
-  history_12 <- model_13 %>% fit(X_train, y_train, epochs = 600, batch_size = 2^10, validation_split = 0.3, callbacks = list(
+  history_13 <- model_13 %>% fit(X_train, y_train, epochs = 200, batch_size = 2^10, validation_split = 0.3, callbacks = list(
     callback_reduce_lr_on_plateau(factor = 0.5, patience = 5), callback_early_stopping(patience = 10)))
   
   history_plot_13 <- plot(history_13) + theme_bw()
@@ -446,3 +448,4 @@ library(keras)
   
   confusionMatrix(data = factor(as.numeric(y_hat_13), levels = 1:3), 
                   reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
+  
