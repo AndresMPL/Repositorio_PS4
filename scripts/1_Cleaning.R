@@ -92,11 +92,10 @@
   
   train_token[is.na(train_token$lemma), "lemma"] <- train_token[is.na(train_token$lemma), "word"]
   
-  conteo <- train_token %>% count(lemma) %>% arrange(desc(n)) %>% tail(1000)
+  #data <- test_token %>% group_by(lemma) %>% summarise(n = n()) %>% arrange(desc(-n)) %>% as.data.frame()
+  #palabras_eliminar <- train_token %>% count(lemma) %>% filter(n < 20)
   
-  palabras_eliminar <- train_token %>% count(lemma) %>% filter(n < 10)
-  
-  train_token <- train_token %>% anti_join(palabras_eliminar, by = "lemma") 
+  #train_token <- train_token %>% anti_join(palabras_eliminar, by = "lemma") 
   
   train_clean_2 <- train_token %>% #Generamos la BD con el texto limpio
     group_by(name, id, n_palabras_i) %>% 
@@ -237,12 +236,17 @@
     head(1000) %>%
     rownames()
   
-  #tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas_2)) 
+  tf_idf_reducido <- tf_idf %>% select(all_of(columnas_seleccionadas_2)) 
   dim(tf_idf_reducido)
   
   
 #Matriz Test
   
+  #Ejecutamos si queremos todas las columnas comunes
   tf_idf_reducido2 <- tf_idf2 %>% select(all_of(columnas_seleccionadas))
+  dim(tf_idf_reducido2)
+  
+  #Ejecutamos si queremos un número específico de columnas 
+  tf_idf_reducido2 <- tf_idf2 %>% select(all_of(columnas_seleccionadas_2))
   dim(tf_idf_reducido2)
   
