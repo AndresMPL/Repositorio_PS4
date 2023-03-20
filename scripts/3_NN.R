@@ -449,3 +449,33 @@ library(keras)
   confusionMatrix(data = factor(as.numeric(y_hat_13), levels = 1:3), 
                   reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
   
+  ##Modelo 14---------------------------------------------------------------------
+  #Modelo 5245 palabras
+  
+  rm(model_14)
+  model_14 <- keras_model_sequential() 
+  model_14 %>% 
+    layer_dense(units = 512, activation = 'relu', input_shape = ncol(X_train)) %>% 
+    layer_dropout(rate = 0.5) %>%
+    layer_dense(units = 256, activation = 'relu') %>%
+    layer_dropout(rate = 0.5) %>%
+    layer_dense(units = 128, activation = 'softmax')  %>%
+    layer_dropout(rate = 0.5) %>%
+    layer_dense(units = 4, activation = 'softmax')
+  
+  summary(model_14)
+  
+  model_14 %>% compile(optimizer = optimizer_adam(learning_rate = 0.001), loss = 'categorical_crossentropy', metrics = c('CategoricalAccuracy'))
+  
+  history_14 <- model_14 %>% fit(X_train, y_train, epochs = 100, batch_size = 2^8, validation_split = 0.3, callbacks = list(
+    callback_reduce_lr_on_plateau(factor = 0.5, patience = 5), callback_early_stopping(patience = 10)))
+  
+  history_plot_14 <- plot(history_14) + theme_bw()
+  history_plot_14
+  
+  model_14 %>% evaluate(X_test, y_test)
+  
+  y_hat_14 <- model_14 %>% predict(X_test) %>% k_argmax()
+  
+  confusionMatrix(data = factor(as.numeric(y_hat_14), levels = 1:3), 
+                  reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
