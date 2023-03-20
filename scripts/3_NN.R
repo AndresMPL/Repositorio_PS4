@@ -10,17 +10,17 @@ library(keras)
 #-----------------------------------------------------
   
   #Instalación de TF
-      install.packages("tensorflow")
+      #install.packages("tensorflow")
       library(reticulate)
-      path_to_python <- install_python()
-      virtualenv_create("r-reticulate", python = path_to_python)
+      #path_to_python <- install_python()
+      #virtualenv_create("r-reticulate", python = path_to_python)
       library(tensorflow)
-      install_tensorflow(envname = "r-reticulate")
-      install.packages("keras")
+      #install_tensorflow(envname = "r-reticulate")
+      #install.packages("keras")
       library(keras)
-      install_keras(envname = "r-reticulate")
+      #install_keras(envname = "r-reticulate")
       library(tensorflow)
-      tf$constant("Hello Tensorflow!")
+      #tf$constant("Hello Tensorflow!")
 
 #------------------------------------------------------
 
@@ -320,6 +320,11 @@ library(keras)
   confusionMatrix(data = factor(as.numeric(y_hat_9), levels = 1:3), 
                   reference = factor(train_clean_2$name2[-train_indices], levels = 1:3))
   
+  tabla_modelo <- xtable(summary(model_9))
+  stargazer::stargazer(model_9)
+  
+  
+  print(model_9)
   
 ##Modelo 10---------------------------------------------------------------------
   
